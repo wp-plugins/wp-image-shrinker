@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WordPress Image shrinker
+ * Plugin Name: WordPress Image Shrinker
  * Plugin URI: http://www.hetworks.nl
  * Description: Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNG and JPG images.
  * Version: 1.0
@@ -12,7 +12,7 @@
 add_action('admin_menu', 'hetworkstinypng_createoptionspage');
 
 function hetworkstinypng_createoptionspage() {
-	add_menu_page('Image shrinker', 'Image shrinker', 'administrator', 'hetworkstinypng_optionspage', 'hetworkstinypng_displayoptionspage');
+	add_menu_page('Image Shrinker', 'Image Shrinker', 'administrator', 'hetworkstinypng_optionspage', 'hetworkstinypng_displayoptionspage');
 	add_action( 'admin_init', 'hetworkstinypng_registersettings' );
 }
 
@@ -37,7 +37,7 @@ add_filter( "plugin_action_links_$plugin", 'hetworkstinypng_add_settings_link' )
 function hetworkstinypng_displayoptionspage() { ?>
 
 <div class="wrap">
-	<h2>WordPress Image shrinker by HETWORKS</h2>
+	<h2>WordPress Image Shrinker by HETWORKS</h2>
 	<p>In order for this plugin to work you need to enter an API key from TinyPNG. You can generate your key on <a href="https://tinypng.com/developers" target="_blank">https://tinypng.com/developers</a>.
 	An API key is free for the first 500 images each month. If you have more images you
 	need to pay a small amount.</p>
@@ -55,7 +55,7 @@ function hetworkstinypng_displayoptionspage() { ?>
 </form>
 	<p>With the button below you can reprocess all the images in your Media library. You will see a great improvement in your Google Pagespeed score afterwards.</p>
 	<?php if (get_option('tinypng_apikey') != '') { $bclasses = 'secondary hetworkstinypng_ajax_button'; } else { $bclasses = 'secondary disabled'; } ?>
-	<?php submit_button('TinyPNG all current images', $bclasses); ?> <div class="bespaarddiv">Space saved: <span class="bespaard"></span> (<span class="ratio"></span>%)</div>
+	<?php submit_button('Shrink all current images', $bclasses); ?> <div class="bespaarddiv">Space saved: <span class="bespaard"></span> (<span class="ratio"></span>%)</div>
 	<table class="hetworkstinypng_images" style="display: none;">
 		<thead>
 			<tr>

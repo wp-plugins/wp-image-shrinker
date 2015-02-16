@@ -1,17 +1,17 @@
 === WordPress Image shrinker ===
-Contributors: HetWorks
-Plugin Name: HETWORKS TinyPNG
-Plugin URI: http://www.hetworks.nl
+Contributors: HETWORKS
+Plugin Name: WordPress Image Shrinker by HETWORKS
+Plugin URI: https://wordpress.org/plugins/wp-image-shrinker/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6JSXUB6Q9SD2U&lc=NL&item_name=HETWORKS&item_number=TinyPNG%20for%20WordPress&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
-Version: 0.1.1
+Version: 1.0
 Tested up to: 4.1
 Author: Anne Rozema
 Author URI: http://www.hetworks.nl
-Tags: images
+Tags: downsize, image, optimisation, optimise, optimization, optimize, plugin, processing, resize, resizing, upload, bandwidth, compress, faster, improve, smush, shrink, performance, png, jpg, jpeg, speed, tinyjpg, tinypng, website, jpegmini, pngmini
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNG and JPG images.
+Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNGs and JPGs.
 
 == Description ==
 
@@ -36,9 +36,9 @@ difference in file size!
 
 This section describes how to install the plugin and get it working.
 
-1. Upload the HETWORKS TinyPNG folder to the plugins directory in your WordPress installation
+1. Upload the WordPress Image shrinker folder to the plugins directory in your WordPress installation
 2. Activate the plugin
-3. Navigate to the HETWORKS TinyPNG UI Menu
+3. Navigate to the WordPress Image shrinker UI Menu
 4. Generate your TinyPNG API key from https://tinypng.com/developers and enter it on the Settings page.
 
 That's it! From now on all your new images are shrinked on the fly!
@@ -46,7 +46,7 @@ That's it! From now on all your new images are shrinked on the fly!
 
 == Frequently Asked Questions ==
 
-= The plugin doesn't work =
+= The plugin doesn't work? =
 
 Did you insert your TinyPNG API key? You can retreive it from https://tinypng.com/developers It is free for up to 500 images per month.
 
