@@ -61,7 +61,7 @@ After the image is uploaded WordPress shows you it is finished (100%), but right
 
 == Screenshots ==
 
-
+1. Screenshot of backend panel
 
 == Changelog ==
 
