@@ -164,6 +164,8 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 							nextimage.find("td[data-tdsize='"+size+"']").html('').append('<span class="dashicons dashicons-no-alt"></span><br />' + res.message);
 							if (res.error == 'TooManyRequests') {
 								jQuery("div.bespaarddiv").css('color', 'red').html(res.message);
+							} else {
+								console.log(res.error);
 							}
 						}
 					}, 
@@ -312,6 +314,9 @@ function hetworkstinypng_tinypngrequest($input, $output, $key) {
 			if ($jsonarr->error == 'TooManyRequests') {
 				return $json;
 			}
-			return 'fail: error: {' . curl_error($request) . $json . '}';
+			$jerror = Array();
+			$jerror['error'][] = curl_error($request);
+			$jerror['error'][] = $json;
+			return $jerror;
 		}
 }
