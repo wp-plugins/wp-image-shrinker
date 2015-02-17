@@ -3,7 +3,7 @@
  * Plugin Name: WordPress Image Shrinker
  * Plugin URI: http://www.hetworks.nl
  * Description: Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNG and JPG images.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: HETWORKS
  * Author URI: http://www.hetworks.nl
  * License: GPLv2 or later
@@ -127,9 +127,10 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 				var tdata = {
 					'action': 'hetworkstinypng_ajaxaction_tinypngimage',
 					'url': url,
-					'id': id
+					'id': id,
+					'dataType': 'json'
 				};
-				jQuery.ajax({
+			jQuery.ajax({
 					type: 'POST',
 					url: ajaxurl,
 					data: tdata,
@@ -137,8 +138,12 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 						nextimage.find("td[data-tdsize='"+size+"']").html('').append('<img src="<?php echo plugins_url( 'img/ajax-loader.gif', __FILE__ ); ?>"  />');
 					}, 
 					success: completeHandler = function(response) {
-						res = jQuery.parseJSON(response);
-						if (typeof res.error === 'undefined') {
+						try {
+							res = jQuery.parseJSON(response);
+						} catch(error) {
+							console.log(error);
+						}						
+						if (typeof res !== 'undefined' && typeof res.error === 'undefined' && typeof error === 'undefined') {
 							nextimage.find("td[data-tdsize='"+size+"']").html('').append('<table class="intable"><tr><td>From:</td><td>' + bytesToSize(res.input.size) + '</td></tr><tr><td colspan="2"><span class="dashicons dashicons-yes"></span></td></tr><tr><td>To:</td><td>' + bytesToSize(res.output.size) + '</td></tr></table>'); 
 							voor =  voor + res.input.size;
 							na = na + res.output.size;
@@ -160,12 +165,20 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 									}
 								});
 							}
-						} else {
+						} else if (typeof res !== 'undefined' && typeof res.error !== 'undefined') {
 							nextimage.find("td[data-tdsize='"+size+"']").html('').append('<span class="dashicons dashicons-no-alt"></span><br />' + res.message);
 							if (res.error == 'TooManyRequests') {
 								jQuery("div.bespaarddiv").css('color', 'red').html(res.message);
 							} else {
 								console.log(res.error);
+								if (size == 'full') {
+									hetworkstinypng_ajax_sendnextimage();
+								}
+							}
+						} else if (typeof res === 'undefined') {							
+							nextimage.find("td[data-tdsize='"+size+"']").html('').append('<span class="dashicons dashicons-no-alt"></span>');
+							if (size == 'full') {
+								hetworkstinypng_ajax_sendnextimage();
 							}
 						}
 					}, 
