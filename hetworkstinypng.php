@@ -146,7 +146,6 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 							bespaard = bespaard + (res.input.size - res.output.size);
 							jQuery("span.bespaard").html(bytesToSize(bespaard));
 							if (size == 'full') {
-								console.log(id);
 								hetworkstinypng_ajax_sendnextimage();
 								var donedata = {
 									'action': 'hetworkstinypng_ajaxaction_tinypngdone',
