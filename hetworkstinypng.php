@@ -161,7 +161,7 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 									url: ajaxurl,
 									data: donedata,
 									success: completeHandler = function(response) {
-										console.log(response);
+										//console.log(response);
 									}
 								});
 							}
