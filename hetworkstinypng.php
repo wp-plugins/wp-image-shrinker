@@ -3,7 +3,7 @@
  * Plugin Name: WordPress Image Shrinker
  * Plugin URI: http://www.hetworks.nl
  * Description: Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNG and JPG images.
- * Version: 1.0
+ * Version: 1.0.1
  * Author: HETWORKS
  * Author URI: http://www.hetworks.nl
  * License: GPLv2 or later
