@@ -65,11 +65,18 @@ After the image is uploaded WordPress shows you it is finished (100%), but right
 
 == Changelog ==
 
-= 1.0 =
-* First release
+= 1.0.3 =
+* Added API Key input reminder on plugins page if no api key is present
+
+= 1.0.2 =
+* Better error handling
 
 = 1.0.1 =
 * Bugfixes
 
-= 1.0.2 =
-* Better error handling
+= 1.0 =
+* First release
+
+
+
+
