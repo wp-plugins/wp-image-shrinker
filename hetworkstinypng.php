@@ -3,7 +3,7 @@
  * Plugin Name: WordPress Image Shrinker
  * Plugin URI: http://www.hetworks.nl
  * Description: Reduce image file sizes drastically and improve performance and Pagespeed score using the TinyPNG API within WordPress. Works for both PNG and JPG images.
- * Version: 1.0.3
+ * Version: 1.1.0
  * Author: HETWORKS
  * Author URI: http://www.hetworks.nl
  * License: GPLv2 or later
@@ -18,6 +18,14 @@ function hetworkstinypng_createoptionspage() {
 
 function hetworkstinypng_registersettings() {
 	register_setting('hetworkstinypng_settings', 'tinypng_apikey');
+	register_setting('hetworkstinypng_settings', 'hetworkstinypng_sizes');
+	$sizearr = get_option('hetworkstinypng_sizes');
+	foreach (get_intermediate_image_sizes() as $imagesize) {
+		if (!isset($sizearr[$imagesize])){
+			$sizearr[$imagesize] = true;
+		}
+	}
+	update_option('hetworkstinypng_sizes', $sizearr);
 }
 
 /*
@@ -54,10 +62,28 @@ function hetworkstinypng_displayoptionspage() { ?>
 			<td><input type="text" name="tinypng_apikey" style="min-width: 300px;" value="<?php echo esc_attr( get_option('tinypng_apikey') ); ?>" /></td>
 		</tr>
 	</table>
-	
+	<h4>Image sizes to compress</h4>
+	<p>Which sizes do you want to compress when you click on the "Shrink all current images" button? (on a new upload the full image is compressed before the other sizes are made by wordpress so only 1 api call is needed on new upload)</p>
+	<?php $sizearr = get_option('hetworkstinypng_sizes'); ?>
+	<table>
+		<tr>
+			<td><input class="hetworkstinypng_size disabled" type="checkbox" id="hetworkstinypng_sizes_full" name="" value="1" checked disabled /></td>
+			<td>full</td>
+		</tr>
+		<?php foreach (get_intermediate_image_sizes() as $imagesize) { ?>
+			<tr>
+				<td>
+					<input type="hidden" name="hetworkstinypng_sizes[<?= $imagesize; ?>]" value="0" />
+					<input class="hetworkstinypng_size" type="checkbox" id="hetworkstinypng_sizes_<?= $imagesize; ?>" name="hetworkstinypng_sizes[<?= $imagesize; ?>]" value="1" <?php if ($sizearr[$imagesize] == true) { echo 'checked'; } ?> />
+				</td>
+				<td><label for="hetworkstinypng_sizes_<?= $imagesize; ?>"><?= $imagesize; ?></label></td>
+			</tr>
+		<?php } ?>
+	</table>
 	<?php submit_button(); ?>
 </form>
 	<p>With the button below you can reprocess all the images in your Media library. You will see a great improvement in your Google Pagespeed score afterwards.</p>
+	<p class="hetworkstinypng_sizes_error" style="display: none; color:red;">Save changes to settings before Shrinking current images</p>
 	<?php if (get_option('tinypng_apikey') != '') { $bclasses = 'secondary hetworkstinypng_ajax_button'; } else { $bclasses = 'secondary disabled'; } ?>
 	<?php submit_button('Shrink all current images', $bclasses); ?> <div class="bespaarddiv">Space saved: <span class="bespaard"></span> (<span class="ratio"></span>%)</div>
 	<table class="hetworkstinypng_images" style="display: none;">
@@ -66,7 +92,9 @@ function hetworkstinypng_displayoptionspage() { ?>
 				<th>Image</th><th>Image name</th>
 					<th>full</th>
 					<?php foreach (get_intermediate_image_sizes() as $imagesize) { ?>
-						<th><?= $imagesize; ?></th>
+						<?php if ($sizearr[$imagesize] == true) { ?>
+							<th><?= $imagesize; ?></th>
+						<?php }?>
 					<?php } ?>
 			</tr>
 		</thead>
@@ -89,12 +117,16 @@ function hetworkstinypng_displayoptionspage() { ?>
 add_action( 'admin_footer', 'hetworkstinypng_ajaxactionrequest' );
 
 function hetworkstinypng_ajaxactionrequest() { ?>
+<?php $sizearr = get_option('hetworkstinypng_sizes'); ?>
 	<script type="text/javascript" >
 	var voor = 0;
 	var na = 0;
 	var bespaard = 0;
 	jQuery(document).ready(function($) {
-		
+		$(".hetworkstinypng_size").change(function() {
+			$(".hetworkstinypng_ajax_button").addClass('disabled');
+			$(".hetworkstinypng_sizes_error").show();
+		});
 		$(".hetworkstinypng_ajax_button").click(function() {
 			if (!$(this).hasClass('disabled')) {
 				$(this).addClass('disabled');
@@ -107,9 +139,9 @@ function hetworkstinypng_ajaxactionrequest() { ?>
 					$("table.hetworkstinypng_images tbody").html('').parent('table').show();
 					$.each($.parseJSON(response), function(i,v) {
 						if (v.status != 'done') {
-							$("table.hetworkstinypng_images tbody").append('<tr data-id="'+v.id+'" data-basename="'+v.basename+'" data-url="'+v.url+'" data-done="false" data-sizes=\''+v.sizes+'\'><td><img class="hetworkstinypng_thumb" src="'+v.thumb+'" /></td><td>'+v.basename+'</td><td class="sizetd" data-tdsize="full"></td><?php foreach (get_intermediate_image_sizes() as $imagesize) { ?><td class="sizetd" data-tdsize="<?= $imagesize; ?>"></td><?php } ?></tr>');
+							$("table.hetworkstinypng_images tbody").append('<tr data-id="'+v.id+'" data-basename="'+v.basename+'" data-url="'+v.url+'" data-done="false" data-sizes=\''+v.sizes+'\'><td><img class="hetworkstinypng_thumb" src="'+v.thumb+'" /></td><td>'+v.basename+'</td><td class="sizetd" data-tdsize="full"></td><?php foreach (get_intermediate_image_sizes() as $imagesize) { ?><?php if ($sizearr[$imagesize] == true) { ?><td class="sizetd" data-tdsize="<?= $imagesize; ?>"></td><?php }} ?></tr>');
 						} else {
-							$("table.hetworkstinypng_images tbody").append('<tr data-id="'+v.id+'" data-basename="'+v.basename+'" data-url="'+v.url+'" data-done="true" data-sizes=\''+v.sizes+'\'><td><img class="hetworkstinypng_thumb" src="'+v.thumb+'" /></td><td>'+v.basename+'</td><td class="sizetd" data-tdsize="full"></td><?php foreach (get_intermediate_image_sizes() as $imagesize) { ?><td class="sizetd" data-tdsize="<?= $imagesize; ?>"></td><?php } ?></tr>');
+							$("table.hetworkstinypng_images tbody").append('<tr data-id="'+v.id+'" data-basename="'+v.basename+'" data-url="'+v.url+'" data-done="true" data-sizes=\''+v.sizes+'\'><td><img class="hetworkstinypng_thumb" src="'+v.thumb+'" /></td><td>'+v.basename+'</td><td class="sizetd" data-tdsize="full"></td><?php foreach (get_intermediate_image_sizes() as $imagesize) { ?><?php if ($sizearr[$imagesize] == true) { ?><td class="sizetd" data-tdsize="<?= $imagesize; ?>"></td><?php }} ?></tr>');
 						}
 					});
 					$(".sizetd").html('<span class="dashicons dashicons-clock"></span>');
@@ -235,9 +267,12 @@ function hetworkstinypng_ajaxaction_getimages() {
 		$images[$i]['basename'] = basename($images[$i]['url']);
 		$images[$i]['id'] = $image->ID;
 		$images[$i]['sizes'] = Array();
+		$sizearr = get_option('hetworkstinypng_sizes');
 		foreach (get_intermediate_image_sizes() as $imagesize) {
-			$size = wp_get_attachment_image_src( $image->ID, $imagesize);
-			$images[$i]['sizes'][$imagesize] = $size[0];
+			if ($sizearr[$imagesize] == true) {
+				$size = wp_get_attachment_image_src( $image->ID, $imagesize);
+				$images[$i]['sizes'][$imagesize] = $size[0];
+			}
 		}
 		$images[$i]['sizes']['full'] = $images[$i]['url'];
 		$images[$i]['sizes'] = json_encode($images[$i]['sizes']);

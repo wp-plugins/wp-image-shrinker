@@ -3,7 +3,7 @@ Contributors: HETWORKS
 Plugin Name: WordPress Image Shrinker by HETWORKS
 Plugin URI: https://wordpress.org/plugins/wp-image-shrinker/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=6JSXUB6Q9SD2U&lc=NL&item_name=HETWORKS&item_number=TinyPNG%20for%20WordPress&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
-Version: 1.0.2
+Version: 1.1.0
 Tested up to: 4.1
 Author: Anne Rozema
 Author URI: http://www.hetworks.nl
@@ -64,6 +64,9 @@ After the image is uploaded WordPress shows you it is finished (100%), but right
 1. Screenshot of backend panel
 
 == Changelog ==
+
+= 1.1.0 =
+* Added option to pick which sizes of already uploaded images to compress
 
 = 1.0.3 =
 * Added API Key input reminder on plugins page if no api key is present
